@@ -27,14 +27,16 @@ find_package(OpenGL REQUIRED)
 
 # Build & Pack
 add_executable(opengl
-        src/main.cpp
-        src/shader.cpp
-        src/shader.h
         include/glad/glad.c
+        src/main.cpp
+        src/Shader.cpp
+        src/VertexBuffer.cpp
+        src/Application.cpp
 )
 
 target_include_directories(opengl
         PRIVATE ${CMAKE_SOURCE_DIR}/src
+        PRIVATE ${CMAKE_SOURCE_DIR}/shaders
         PRIVATE ${CMAKE_SOURCE_DIR}/include/glad
         PRIVATE ${CMAKE_SOURCE_DIR}/include/KHR
 )
@@ -43,4 +45,5 @@ target_link_libraries(opengl PRIVATE glfw OpenGL::GL glm::glm)
 add_custom_target(run
         COMMAND $<TARGET_FILE:opengl>
         DEPENDS opengl
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
