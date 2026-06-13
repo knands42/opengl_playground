@@ -1,16 +1,23 @@
 #pragma once
 
-#include "GLFW/glfw3.h"
 #include "glad.h"
+#include "GLFW/glfw3.h"
+#include "Shader.h"
+#include "VertexBuffer.h"
 
 class Application
 {
 public:
-    auto run() -> int;
+    Application();
+    ~Application();
 
+    auto run() -> int;
+    auto run(unsigned int get_shader_program, unsigned int get_vao) -> void;
 private:
     unsigned int width = 800, height = 600;
     GLFWwindow *window = nullptr;
+    unsigned int m_VAO;
+    unsigned int m_shaderProgram;
 
     void mainLoop();
 

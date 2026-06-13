@@ -6,40 +6,40 @@
 #include <cerrno>
 #include <cstring>
 #include <filesystem>
-#include <iostream>
 
 Shader::Shader(
-    std::string vertexPath,
-    std::string fragmentPath) : m_VertexPath(std::move(vertexPath)),
-                                m_FragmentPath(std::move(fragmentPath))
+    const std::string &vertexPath,
+    const std::string &fragmentPath)
 {
-}
-
-Shader::~Shader()
-{
-    glDeleteProgram(m_ShaderProgram);
-}
-
-auto Shader::CreateProgram() -> unsigned int
-{
-    const std::string vertexShaderSource = ParseShader(m_VertexPath);
-    const std::string fragmentShaderSource = ParseShader(m_FragmentPath);
+    const std::string vertexShaderSource = ParseShader(vertexPath);
+    const std::string fragmentShaderSource = ParseShader(fragmentPath);
 
     const unsigned int vertexShader =
             CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
     const unsigned int fragmentShader =
             CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-    const unsigned int shaderProgram = ShaderProgram(vertexShader, fragmentShader);
-
     m_VertexShader = vertexShader;
     m_FragmentShader = fragmentShader;
+}
+
+Shader::~Shader()
+{
+    Unbind();
+}
+
+auto Shader::Bind() -> void
+{
+    const unsigned int shaderProgram = CreateProgram(m_VertexShader, m_FragmentShader);
     m_ShaderProgram = shaderProgram;
 
     // delete the shaders as they're linked into our program and no longer necessary
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteShader(m_VertexShader);
+    glDeleteShader(m_FragmentShader);
+}
 
-    return shaderProgram;
+auto Shader::Unbind() -> void
+{
+    glDeleteProgram(m_ShaderProgram);
 }
 
 auto Shader::CompileShader(const unsigned int type, const std::string &source) -> unsigned int
@@ -64,7 +64,7 @@ auto Shader::CompileShader(const unsigned int type, const std::string &source) -
     return newShader;
 }
 
-auto Shader::ShaderProgram(const unsigned int vertexShader, const unsigned int fragmentShader) -> unsigned int
+auto Shader::CreateProgram(const unsigned int vertexShader, const unsigned int fragmentShader) -> unsigned int
 {
     const unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -90,7 +90,7 @@ auto Shader::ParseShader(const std::string &file) -> std::string
     std::ifstream stream(file);
     if (!stream.is_open())
     {
-        throw std::runtime_error("Failed to open shader: " + file + std::strerror(errno));
+        throw std::runtime_error("Failed to open shader: " + file + " with error: " + std::strerror(errno));
     }
 
     std::stringstream ss;

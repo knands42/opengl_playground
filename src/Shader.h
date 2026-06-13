@@ -10,21 +10,17 @@ public:
     [[nodiscard]] auto GetFragmentShader() const -> unsigned int { return m_FragmentShader; }
     [[nodiscard]] auto GetShaderProgram() const -> unsigned int { return m_ShaderProgram; }
 
-    explicit Shader(std::string  vertexPath, std::string  fragmentPath);
+    explicit Shader(const std::string&  vertexPath, const std::string&  fragmentPath);
     ~Shader();
 
-    auto CreateProgram() -> unsigned int;
-
+    auto Bind() -> void;
+    auto Unbind() -> void;
 private:
-    std::string m_VertexPath;
-    std::string m_FragmentPath;
+    unsigned int m_ShaderProgram;
+    unsigned int m_VertexShader;
+    unsigned int m_FragmentShader;
 
-    unsigned int m_ShaderProgram = 0;
-    unsigned int m_VertexShader = 0;
-    unsigned int m_FragmentShader = 0;
-
-
-    static auto ShaderProgram(unsigned int vertexShader, unsigned int fragmentShader) -> unsigned int;
+    static auto CreateProgram(unsigned int vertexShader, unsigned int fragmentShader) -> unsigned int;
     static auto CompileShader(unsigned int type, const std::string &source) -> unsigned int;
     static auto ParseShader(const std::string &file) -> std::string;
 };

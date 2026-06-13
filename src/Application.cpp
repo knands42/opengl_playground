@@ -1,9 +1,13 @@
 #include "Application.h"
 
 #include "iostream"
-#include "glad.h"
 
-auto Application::run() -> int
+Application::~Application()
+{
+    glfwTerminate();
+}
+
+Application::Application()
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -21,7 +25,7 @@ auto Application::run() -> int
     {
         std::cout << "Failed to create GLFW window" << '\n';
         glfwTerminate();
-        return -1;
+        throw std::runtime_error("Failed to create GLFW window");
     }
 
     glfwMakeContextCurrent(window);
@@ -32,16 +36,17 @@ auto Application::run() -> int
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
         std::cout << "Failed to initialize GLAD" << '\n';
-        return -1;
+        throw std::runtime_error("Failed to initialize GLAD");
     }
+}
+
+auto Application::run(unsigned int shaderProgram, unsigned int VAO) -> void
+{
+    m_shaderProgram = shaderProgram;
+    m_VAO = VAO;
 
     mainLoop();
-
-    // TODO: call shaders/bufferArrays delete call
-
     glfwTerminate();
-
-    return 0;
 }
 
 void Application::mainLoop()
@@ -56,8 +61,8 @@ void Application::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw a triangle
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
+        glUseProgram(m_shaderProgram);
+        glBindVertexArray(m_VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // check and call events and swap the buffers
