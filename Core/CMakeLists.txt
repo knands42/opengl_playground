@@ -5,6 +5,8 @@
 set(SOURCES
         Source/Core/Application.h
         Source/Core/Application.cpp
+        Source/Core/Window.cpp
+        Source/Core/Window.h
 )
 
 add_library(Core STATIC)
@@ -22,4 +24,4 @@ target_link_libraries(Core glfw)
 target_link_libraries(Core glad)
 target_link_libraries(Core glm)
 
-target_include_directories(Core PUBLIC "Source" "vendor/stb")
+target_include_directories(Core PUBLIC "Source" "vendor")

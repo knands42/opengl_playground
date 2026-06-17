@@ -21,8 +21,13 @@ target_link_libraries(App Core)
 
 target_include_directories(App PRIVATE Source)
 
-# TODO: Change to Clio
 # Set working directory for VS debugger
 set_target_properties(App PROPERTIES
         VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/App"
+)
+
+add_custom_target(run
+    COMMAND App
+    DEPENDS App
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/App"
 )
