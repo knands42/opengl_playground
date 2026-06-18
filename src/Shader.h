@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sstream>
-#include "glad.h"
+#include <glad/gl.h>
 
 class Shader
 {

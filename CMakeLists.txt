@@ -8,6 +8,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Dependencies
 include(Dependencies.cmake)
 
-# Projects
-add_subdirectory(App)
-add_subdirectory(Core)
+# Build & Pack
+add_executable(opengl
+        src/Main.cpp
+        src/Shader.cpp
+        src/VertexBuffer.cpp
+        src/Application.cpp
+)
+
+target_include_directories(opengl
+        PRIVATE ${CMAKE_SOURCE_DIR}/src
+        PRIVATE ${CMAKE_SOURCE_DIR}/shaders
+)
+target_link_libraries(opengl PRIVATE glfw OpenGL::GL glm::glm glad)
+
+add_custom_target(run
+        COMMAND $<TARGET_FILE:opengl>
+        DEPENDS opengl
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)

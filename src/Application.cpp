@@ -33,7 +33,7 @@ Application::Application()
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+    if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)))
     {
         std::println("Failed to initialize GLAD");
         throw std::runtime_error("Failed to initialize GLAD");
