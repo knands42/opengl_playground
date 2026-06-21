@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 
 class Shader
 {
@@ -14,7 +15,8 @@ public:
     ~Shader();
 
     auto Bind() -> void;
-    auto Unbind() -> void;
+    auto Unbind() const -> void;
+    auto SetUniform(const char* variable, glm::vec4 vector) const -> void;
 private:
     unsigned int m_ShaderProgram;
     unsigned int m_VertexShader;

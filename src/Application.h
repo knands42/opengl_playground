@@ -14,22 +14,22 @@ public:
     Application();
     ~Application();
 
-    auto run(unsigned int get_shader_program, unsigned int get_vao) -> void;
+    auto Run(Shader &shader, VertexBuffer &vertexBuffer) -> void;
 private:
     unsigned int width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT;
     GLFWwindow *window = nullptr;
-    unsigned int m_VAO;
-    unsigned int m_shaderProgram;
+    Shader *m_shader{};
+    VertexBuffer *m_vertexBuffer{};
 
-    void mainLoop() const;
+    void MainLoop() const;
 
     // glfw: whenever the window size changed (by OS or user resize) this callback
     // function executes
     // ---------------------------------------------------------------------------------------------
-    static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+    static void FramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
     // process all input: query GLFW whether relevant keys are pressed/released this
     // frame and react accordingly
     // ---------------------------------------------------------------------------------------------------------
-    static void processInput(GLFWwindow *window);
+    static void ProcessInput(GLFWwindow *window);
 };

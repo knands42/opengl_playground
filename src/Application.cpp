@@ -29,53 +29,62 @@ Application::Application()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)))
+    if (!gladLoadGL(glfwGetProcAddress))
     {
         std::println("Failed to initialize GLAD");
         throw std::runtime_error("Failed to initialize GLAD");
     }
 }
 
-auto Application::run(unsigned int shaderProgram, unsigned int VAO) -> void
+auto Application::Run(Shader &shader, VertexBuffer &vertexBuffer) -> void
 {
-    m_shaderProgram = shaderProgram;
-    m_VAO = VAO;
+    m_shader = &shader;
+    m_vertexBuffer = &vertexBuffer;
 
-    mainLoop();
+    float vertices[] = {
+        // positions         // colors
+        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
+       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
+        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top
+   };
+    m_vertexBuffer->Init(vertices, sizeof(vertices), nullptr, 0);
+
+    MainLoop();
     glfwTerminate();
 }
 
-void Application::mainLoop() const
+void Application::MainLoop() const
 {
     while (!glfwWindowShouldClose(window))
     {
         // input
-        processInput(window);
+        ProcessInput(window);
 
         // rendering commands here
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // draw a triangle
-        glUseProgram(m_shaderProgram);
-        glBindVertexArray(m_VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // render
+        m_shader->Bind();
+        m_vertexBuffer->Bind();
+        m_vertexBuffer->Draw();
+
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
 
-void Application::framebuffer_size_callback(GLFWwindow *window, const int width, const int height)
+void Application::FramebufferSizeCallback(GLFWwindow *window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
 }
 
-void Application::processInput(GLFWwindow *window)
+void Application::ProcessInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {

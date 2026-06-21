@@ -13,6 +13,6 @@ int main()
     VertexBuffer vertexBuffer{};
     vertexBuffer.Bind();
 
-    app.run(shader.GetShaderProgram(), vertexBuffer.GetVAO());
+    app.Run(shader, vertexBuffer);
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <cerrno>
 #include <cstring>
 #include <filesystem>
+#include <GLFW/glfw3.h>
 
 Shader::Shader(
     const std::string &vertexPath,
@@ -20,6 +21,13 @@ Shader::Shader(
             CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
     m_VertexShader = vertexShader;
     m_FragmentShader = fragmentShader;
+
+    const unsigned int shaderProgram = CreateProgram(m_VertexShader, m_FragmentShader);
+    m_ShaderProgram = shaderProgram;
+
+    // delete the shaders as they're linked into our program and no longer necessary
+    glDeleteShader(m_VertexShader);
+    glDeleteShader(m_FragmentShader);
 }
 
 Shader::~Shader()
@@ -29,17 +37,20 @@ Shader::~Shader()
 
 auto Shader::Bind() -> void
 {
-    const unsigned int shaderProgram = CreateProgram(m_VertexShader, m_FragmentShader);
-    m_ShaderProgram = shaderProgram;
-
-    // delete the shaders as they're linked into our program and no longer necessary
-    glDeleteShader(m_VertexShader);
-    glDeleteShader(m_FragmentShader);
+    glUseProgram(m_ShaderProgram);
 }
 
-auto Shader::Unbind() -> void
+auto Shader::Unbind() const -> void
 {
     glDeleteProgram(m_ShaderProgram);
+}
+
+auto Shader::SetUniform(const char *variable, glm::vec4 vector) const -> void
+{
+    const float timeValue = glfwGetTime();
+    const float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    const int vertexColorLocation = glGetUniformLocation(m_ShaderProgram, "ourColor");
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 }
 
 auto Shader::CompileShader(const unsigned int type, const std::string &source) -> unsigned int
