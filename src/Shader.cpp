@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <GLFW/glfw3.h>
 
+#include "Error.h"
+
 Shader::Shader(
     const std::string &vertexPath,
     const std::string &fragmentPath)
@@ -58,7 +60,7 @@ auto Shader::CompileShader(const unsigned int type, const std::string &source) -
     const unsigned int newShader = glCreateShader(type);
     const char *src = source.c_str();
     glShaderSource(newShader, 1, &src, nullptr);
-    glCompileShader(newShader);
+    GLCall(glCompileShader(newShader));
 
     // check for shader compile errors
     int success = 0;
@@ -78,10 +80,10 @@ auto Shader::CompileShader(const unsigned int type, const std::string &source) -
 auto Shader::CreateProgram(const unsigned int vertexShader, const unsigned int fragmentShader) -> unsigned int
 {
     const unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glValidateProgram(shaderProgram);
+    GLCall(glAttachShader(shaderProgram, vertexShader));
+    GLCall(glAttachShader(shaderProgram, fragmentShader));
+    GLCall(glLinkProgram(shaderProgram));
+    GLCall(glValidateProgram(shaderProgram));
 
     // check for linking errors
     int success = 0;

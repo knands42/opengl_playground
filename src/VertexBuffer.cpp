@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "Error.h"
+
 void VertexBuffer::Init(const float *vertices, const unsigned int vertexSize,
-              const unsigned int *indices, const unsigned int indexSize)
+                        const unsigned int *indices, const unsigned int indexSize)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -37,15 +39,15 @@ VertexBuffer::~VertexBuffer()
 
 auto VertexBuffer::Bind() const -> void
 {
-    glBindVertexArray(VAO);
+    GLCall(glBindVertexArray(VAO));
 }
 
 auto VertexBuffer::Draw() const -> void
 {
     if (useIndices) {
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+        GLCall(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0));
     } else {
-        glDrawArrays(GL_TRIANGLES, 0, 3); // adjust vertex count to match your data
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, 3)); // adjust vertex count to match your data
     }
 }
 
