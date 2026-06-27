@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(Dependencies.cmake)
 
 # Build & Pack
+# TODO: set sources
 add_executable(opengl
         src/Main.cpp
         src/Shader.cpp
@@ -25,6 +26,7 @@ target_include_directories(opengl
         PRIVATE ${CMAKE_SOURCE_DIR}/src
         PRIVATE ${CMAKE_SOURCE_DIR}/shaders
         PRIVATE ${CMAKE_SOURCE_DIR}/vendor
+        PRIVATE ${CMAKE_SOURCE_DIR}/textures
 )
 target_link_libraries(opengl PRIVATE glfw OpenGL::GL glm::glm glad)
 

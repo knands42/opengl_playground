@@ -71,7 +71,7 @@ Application::Application()
     shader->Bind();
     m_Shader = shader;
 
-    Texture* texture = new Texture("wall.jpg");
+    Texture* texture = new Texture("textures/wall.jpg");
     texture->Bind();
     shader->SetUniform1i("u_Texture", 0);
     m_Texture = texture;
